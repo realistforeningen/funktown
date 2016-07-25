@@ -4,3 +4,7 @@ Flask-Assets
 pony
 arrow
 
+# Error handling
+blinker==1.4
+rollbar==0.12.1
+

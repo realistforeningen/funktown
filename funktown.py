@@ -1,12 +1,35 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+import os
+
+from flask import Flask, render_template, request, jsonify, redirect, url_for, got_request_exception
 from flask.ext.assets import Environment, Bundle
 from flask_bootstrap import Bootstrap
 import arrow
+
 
 from models import Person, Role, Assignment, db_session, select, commit
 
 app = Flask(__name__)
 app.debug = True
+
+app.config.from_pyfile('production.cfg', silent=True)
+
+## Exception handling
+import rollbar
+import rollbar.contrib.flask
+
+@app.before_first_request
+def init_rollbar():
+    token = app.config.get('ROLLBAR_ACCESS_TOKEN')
+    if token is None:
+        return
+
+    rollbar.init(
+        token, 'production',
+        root=os.path.dirname(os.path.realpath(__file__)),
+        allow_logging_basic_config=False
+    )
+
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 
 ## Flask-Bootstrap
 Bootstrap(app)
