@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 import arrow
 
 
-from models import Person, Role, Assignment, db_session, select, commit
+from models import Person, Role, Assignment, db_session, select, commit, ObjectNotFound
 
 app = Flask(__name__)
 app.debug = True
@@ -30,6 +30,15 @@ def init_rollbar():
     )
 
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+
+## Pony ObjectNotFound
+@app.errorhandler(404)
+def not_found():
+    return "404"
+
+@app.errorhandler(ObjectNotFound)
+def handle_object_not_found(ex):
+    return not_found()
 
 ## Flask-Bootstrap
 Bootstrap(app)
