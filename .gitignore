@@ -1,0 +1,5 @@
+/env
+*.pyc
+/app.db
+.webassets-cache
+/static/assets

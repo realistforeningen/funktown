@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block main %}
+  <h1>{{ person.name }}</h1>
+  <form class="form" method="POST">
+    <div class="form-group">
+      <label>Navn</label>
+      <input class="form-control" name="name" value="{{ person.name }}">
+    </div>
+    <div class="form-group">
+      <label>Epost</label>
+      <input class="form-control" name="email" value="{{ person.email }}">
+    </div>
+    <button class="btn btn-primary">Lagre</button>
+  </form>
+  {% if assignments %}
+  <h2>Verv</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Periode</th>
+        <th>Verv</th>
+        <th></th>
+    </thead>
+    <tbody>
+    {% for assignment in assignments %}
+      <tr>
+        <td>{{ assignment.semester_str() }}{{ assignment.year }}</td>
+        <td>
+          <!-- <a href="{{ url_for('roles_show', id=assignment.role.id) }}"> -->
+            {{ assignment.role.name }}
+          <!-- </a> -->
+        </td>
+        <td>
+          <form method="POST" action="{{ url_for('assignments_delete', id=assignment.id) }}">
+            <a href="#" onclick="this.parentNode.submit()" class="glyphicon glyphicon-remove"></a>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h2>Legg til verv</h2>
+  <form action="{{ url_for('person_assign', id=person.id) }}" method="POST">
+    <div class="form-group">
+      <label>Rolle</label>
+      <select name="role" class="js-role">
+        <option></option>
+      {% for role in all_roles() %}
+        <option value="{{ role.id }}">{{ role.name }}</option>
+      {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="year">År</label>
+      <input class="form-control" type="text" id="year" name="year" value="{{ today().year }}">
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="semester" value="1" {{ 'checked' if today().month <= 6 }}>
+        Vår
+      </label>
+    </div>
+
+    <div class="radio">
+      <label>
+        <input type="radio" name="semester" value="2" {{ 'checked' if today().month > 6 }}>
+        Høst
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Legg til</button>
+  </form>
+{% endblock %}
+
+
