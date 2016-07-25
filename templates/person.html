@@ -59,14 +59,14 @@
     </div>
     <div class="radio">
       <label>
-        <input type="radio" name="semester" value="1" {{ 'checked' if now().month <= 6 }}>
+        <input type="radio" name="semester" value="1" {{ 'checked' if now().month <= 7 }}>
         Vår
       </label>
     </div>
 
     <div class="radio">
       <label>
-        <input type="radio" name="semester" value="2" {{ 'checked' if now().month > 6 }}>
+        <input type="radio" name="semester" value="2" {{ 'checked' if now().month > 7 }}>
         Høst
       </label>
     </div>
