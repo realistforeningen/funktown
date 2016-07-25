@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask.ext.assets import Environment, Bundle
 from flask_bootstrap import Bootstrap
-from datetime import date
+import arrow
 
 from models import Person, Role, Assignment, db_session, select, commit
 
@@ -24,7 +24,7 @@ def all_roles():
     return select(r for r in Role).order_by(Role.name)
 
 app.add_template_global(all_roles, name='all_roles')
-app.add_template_global(date.today, name='today')
+app.add_template_global(arrow.now, name='now')
 
 @app.route('/')
 @db_session
